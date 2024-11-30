@@ -27,7 +27,7 @@ class MainPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '$tempoProv',
+              '${tempoProv.toInt()}',
             ),
             Text(
               '',
