@@ -1,35 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metornome/providers/providers.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.title});
+class MainPage extends ConsumerWidget {
+  MainPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  int _tempo = 80;
-  void _increaseTempo() {
-    setState(() {
-      _tempo = _tempo + 1;
-    });
-  }
-
-  void _decreaseTempo() {
-    setState(() {
-      _tempo = _tempo - 1;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tempoProv = ref.watch(tempoProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -42,7 +27,7 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '$_tempo',
+              '$tempoProv',
             ),
             Text(
               '',
@@ -55,13 +40,15 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: _increaseTempo,
+            onPressed: () =>
+                ref.read(tempoProvider.notifier).state = tempoProv + 1,
             tooltip: 'Increase tempo',
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
-            onPressed: _decreaseTempo,
+            onPressed: () =>
+                ref.read(tempoProvider.notifier).state = tempoProv - 1,
             tooltip: 'Decrease tempo',
             child: const Icon(Icons.remove),
           ),
