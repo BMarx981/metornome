@@ -5,3 +5,4 @@ final databaseProvider = Provider<AppDatabase>((ref) => AppDatabase());
 
 final tempoProvider = StateProvider<double>((ref) => 80.0);
 
+final playProvider = StateProvider<bool>((ref) => false);

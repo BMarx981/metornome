@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metornome/widgets/triangle_shape.dart';
 import 'package:metornome/providers/providers.dart';
 
 class MainPage extends ConsumerWidget {
@@ -11,6 +12,7 @@ class MainPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tempoProv = ref.watch(tempoProvider);
+    final playProv = ref.watch(playProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -29,9 +31,39 @@ class MainPage extends ConsumerWidget {
             Text(
               '${tempoProv.toInt()}',
             ),
-            Text(
-              '',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(.5),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: GestureDetector(
+                onTap: () => ref.read(playProvider.notifier).state = !playProv,
+                child: playProv
+                    ? Tooltip(
+                        message: "Stop",
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                              color: Colors.blue, shape: BoxShape.rectangle),
+                        ),
+                      )
+                    : Tooltip(
+                        message: "Play",
+                        child: Transform.rotate(
+                          angle: 1.57,
+                          child: CustomPaint(
+                            size: const Size(50, 50),
+                            painter: TriangleShape(),
+                          ),
+                        ),
+                      ),
+              ),
             ),
           ],
         ),
