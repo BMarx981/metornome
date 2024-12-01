@@ -50,7 +50,8 @@ class MainPage extends ConsumerWidget {
                           width: 50,
                           height: 50,
                           decoration: const BoxDecoration(
-                              color: Colors.blue, shape: BoxShape.rectangle),
+                              color: Colors.blueGrey,
+                              shape: BoxShape.rectangle),
                         ),
                       )
                     : Tooltip(
