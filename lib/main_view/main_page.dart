@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metornome/widgets/blinking_widget.dart';
 import 'package:metornome/widgets/triangle_shape.dart';
 import 'package:metornome/providers/providers.dart';
 
 class MainPage extends ConsumerWidget {
-  MainPage({super.key, required this.title});
+  const MainPage({super.key, required this.title});
 
   final String title;
 
@@ -31,14 +32,7 @@ class MainPage extends ConsumerWidget {
             Text(
               '${tempoProv.toInt()}',
             ),
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(.5),
-                shape: BoxShape.circle,
-              ),
-            ),
+            const BlinkingContainer(),
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: GestureDetector(
