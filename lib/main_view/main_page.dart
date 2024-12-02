@@ -1,83 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:metornome/widgets/blinking_widget.dart';
-import 'package:metornome/widgets/triangle_shape.dart';
-import 'package:metornome/providers/providers.dart';
+import 'dart:async';
 
-class MainPage extends ConsumerWidget {
-  const MainPage({super.key, required this.title});
-
-  final String title;
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tempoProv = ref.watch(tempoProvider);
-    final playProv = ref.watch(playProvider);
+  _TempoSquareScreenState createState() => _TempoSquareScreenState();
+}
+
+class _TempoSquareScreenState extends State<MainPage> {
+  bool _isRed = false;
+  late Timer _timer;
+  double _tempo = 120.0; // Default tempo in BPM
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    final interval = (60000 / _tempo).round(); // Calculate interval in ms
+    _timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
+      setState(() {
+        _isRed = true;
+      });
+
+      // Reset color to blue after 200 ms
+      Future.delayed(const Duration(milliseconds: 200), () {
+        setState(() {
+          _isRed = false;
+        });
+      });
+    });
+  }
+
+  void _updateTempo(double newTempo) {
+    setState(() {
+      _tempo = newTempo;
+    });
+    _timer.cancel();
+    _startTimer(); // Restart timer with the new tempo
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
-          )
-        ],
+        title: const Text('Tempo Animation'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '${tempoProv.toInt()}',
-            ),
-            const BlinkingContainer(),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: GestureDetector(
-                onTap: () => ref.read(playProvider.notifier).state = !playProv,
-                child: playProv
-                    ? Tooltip(
-                        message: "Stop",
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                              color: Colors.blueGrey,
-                              shape: BoxShape.rectangle),
-                        ),
-                      )
-                    : Tooltip(
-                        message: "Play",
-                        child: Transform.rotate(
-                          angle: 1.57,
-                          child: CustomPaint(
-                            size: const Size(50, 50),
-                            painter: TriangleShape(),
-                          ),
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FloatingActionButton(
-            onPressed: () =>
-                ref.read(tempoProvider.notifier).state = tempoProv + 1,
-            tooltip: 'Increase tempo',
-            child: const Icon(Icons.add),
+          Center(
+            child: AnimatedContainer(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _isRed ? Colors.red : Colors.transparent,
+              ),
+              duration: const Duration(milliseconds: 50),
+              width: 100,
+              height: 100,
+            ),
           ),
-          const SizedBox(height: 8),
-          FloatingActionButton(
-            onPressed: () =>
-                ref.read(tempoProvider.notifier).state = tempoProv - 1,
-            tooltip: 'Decrease tempo',
-            child: const Icon(Icons.remove),
+          const SizedBox(height: 50),
+          Text('Tempo: ${_tempo.toStringAsFixed(1)} BPM'),
+          Slider(
+            min: 40.0,
+            max: 200.0,
+            value: _tempo,
+            divisions: 160,
+            label: _tempo.toStringAsFixed(1),
+            onChanged: (value) => _updateTempo(value),
           ),
         ],
       ),

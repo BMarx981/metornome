@@ -1,38 +1,20 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:metornome/providers/providers.dart';
-
-class BlinkingContainer extends ConsumerStatefulWidget {
-  const BlinkingContainer({super.key});
-
+class TempoSquareScreen extends StatefulWidget {
   @override
-  ConsumerState<BlinkingContainer> createState() => _BlinkingContainerState();
+  _TempoSquareScreenState createState() => _TempoSquareScreenState();
 }
 
-class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
-  Color _currentColor = Colors.blue;
-  double _currentSize = 50;
+class _TempoSquareScreenState extends State<TempoSquareScreen> {
+  bool _isRed = false;
   late Timer _timer;
+  double _tempo = 120.0; // Default tempo in BPM
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void _startBlinking() {
-    final tempo = ref.watch(tempoProvider);
-    print(tempo);
-    final millisecondsPerBlink = 60000 / tempo;
-    _timer = Timer.periodic(
-        Duration(milliseconds: millisecondsPerBlink.round()), (timer) {
-      // print(millisecondsPerBlink);
-      setState(() {
-        _currentColor = _currentColor == Colors.blue ? Colors.red : Colors.blue;
-        _currentSize = Colors.blue == _currentColor ? 0 : 50;
-      });
-    });
+    _startTimer();
   }
 
   @override
@@ -41,25 +23,60 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
     super.dispose();
   }
 
+  void _startTimer() {
+    final interval = (60000 / _tempo).round(); // Calculate interval in ms
+    _timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
+      setState(() {
+        _isRed = true;
+      });
+
+      // Reset color to blue after 200 ms
+      Future.delayed(const Duration(milliseconds: 200), () {
+        setState(() {
+          _isRed = false;
+        });
+      });
+    });
+  }
+
+  void _updateTempo(double newTempo) {
+    setState(() {
+      _tempo = newTempo;
+    });
+    _timer.cancel();
+    _startTimer(); // Restart timer with the new tempo
+  }
+
   @override
   Widget build(BuildContext context) {
-    _startBlinking();
-    return Stack(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 700),
-          child: Container(
-            width: _currentSize,
-            height: _currentSize,
-            color: Colors.red,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tempo Animation'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              width: 100,
+              height: 100,
+              color: _isRed ? Colors.red : Colors.blue,
+            ),
           ),
-        ),
-        Container(
-          width: 50,
-          height: 50,
-          color: _currentColor,
-        )
-      ],
+          SizedBox(height: 50),
+          Text('Tempo: ${_tempo.toStringAsFixed(1)} BPM'),
+          Slider(
+            min: 40.0,
+            max: 200.0,
+            value: _tempo,
+            divisions: 160,
+            label: _tempo.toStringAsFixed(1),
+            onChanged: (value) => _updateTempo(value),
+          ),
+        ],
+      ),
     );
   }
 }
