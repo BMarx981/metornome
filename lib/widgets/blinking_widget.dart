@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:metornome/providers/providers.dart';
 
 class BlinkingContainer extends ConsumerStatefulWidget {
   const BlinkingContainer({super.key});
@@ -28,15 +29,16 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   }
 
   void _startTimer() {
-    final interval = (60000 / _tempo).round(); // Calculate interval in ms
+    
+    final interval = (60000 / _tempo).round() - 100; // Calculate interval in ms
+    print(interval);
     _timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
       setState(() {
-        print("blink");
         _isRed = true;
       });
 
       // Reset color after 200 ms
-      Future.delayed(const Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 50), () {
         setState(() {
           _isRed = false;
         });
@@ -54,8 +56,10 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final t = ref.watch(tempoProvider);
+    _updateTempo(t);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 50),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,

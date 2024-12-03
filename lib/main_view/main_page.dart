@@ -14,7 +14,6 @@ class MainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tempoProv = ref.watch(tempoProvider);
     final playProv = ref.watch(playProvider);
-    print("main rebuilt");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
