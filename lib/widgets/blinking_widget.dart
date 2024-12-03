@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:metornome/providers/providers.dart';
 
 class BlinkingContainer extends ConsumerStatefulWidget {
   const BlinkingContainer({super.key});
@@ -12,27 +11,14 @@ class BlinkingContainer extends ConsumerStatefulWidget {
 }
 
 class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
-  Color _currentColor = Colors.blue;
-  double _currentSize = 50;
+  bool _isRed = false;
   late Timer _timer;
+  double _tempo = 80.0; // Default tempo in BPM
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void _startBlinking() {
-    final tempo = ref.watch(tempoProvider);
-    print(tempo);
-    final millisecondsPerBlink = 60000 / tempo;
-    _timer = Timer.periodic(
-        Duration(milliseconds: millisecondsPerBlink.round()), (timer) {
-      // print(millisecondsPerBlink);
-      setState(() {
-        _currentColor = _currentColor == Colors.blue ? Colors.red : Colors.blue;
-        _currentSize = Colors.blue == _currentColor ? 0 : 50;
-      });
-    });
+    _startTimer();
   }
 
   @override
@@ -41,25 +27,43 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
     super.dispose();
   }
 
+  void _startTimer() {
+    final interval = (60000 / _tempo).round(); // Calculate interval in ms
+    _timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
+      setState(() {
+        print("blink");
+        _isRed = true;
+      });
+
+      // Reset color after 200 ms
+      Future.delayed(const Duration(milliseconds: 200), () {
+        setState(() {
+          _isRed = false;
+        });
+      });
+    });
+  }
+
+  void _updateTempo(double newTempo) {
+    setState(() {
+      _tempo = newTempo;
+    });
+    _timer.cancel();
+    _startTimer(); // Restart timer with the new tempo
+  }
+
   @override
   Widget build(BuildContext context) {
-    _startBlinking();
-    return Stack(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 700),
-          child: Container(
-            width: _currentSize,
-            height: _currentSize,
-            color: Colors.red,
-          ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 700),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: _isRed ? Colors.red : Colors.transparent,
         ),
-        Container(
-          width: 50,
-          height: 50,
-          color: _currentColor,
-        )
-      ],
+        width: 50,
+        height: 50,
+      ),
     );
   }
 }
