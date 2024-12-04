@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:metornome/providers/providers.dart';
@@ -15,6 +16,7 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   bool _isRed = false;
   late Timer _timer;
   double _tempo = 80.0; // Default tempo in BPM
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -25,17 +27,18 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   @override
   void dispose() {
     _timer.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   void _startTimer() {
-    
     final interval = (60000 / _tempo).round() - 100; // Calculate interval in ms
     print(interval);
-    _timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: interval), (timer) async {
       setState(() {
         _isRed = true;
       });
+      await _audioPlayer.play(AssetSource('sounds/click.mp3'));
 
       // Reset color after 200 ms
       Future.delayed(const Duration(milliseconds: 50), () {

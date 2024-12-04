@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:metornome/widgets/audio_player.dart';
+import 'package:metornome/widgets/stop_button.dart';
 import 'package:metornome/widgets/blinking_widget.dart';
 import 'package:metornome/widgets/triangle_shape.dart';
 import 'package:metornome/providers/providers.dart';
