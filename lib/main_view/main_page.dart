@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metornome/widgets/audio_player.dart';
 import 'package:metornome/widgets/blinking_widget.dart';
 import 'package:metornome/widgets/triangle_shape.dart';
 import 'package:metornome/providers/providers.dart';
@@ -32,22 +33,15 @@ class MainPage extends ConsumerWidget {
             Text(
               '${tempoProv.toInt()}',
             ),
-            const BlinkingContainer(),
+            playProv
+                ? const BlinkingContainer()
+                : const SizedBox(height: 50, width: 50),
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: GestureDetector(
                 onTap: () => ref.read(playProvider.notifier).state = !playProv,
                 child: playProv
-                    ? Tooltip(
-                        message: "Stop",
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                              color: Colors.blueGrey,
-                              shape: BoxShape.rectangle),
-                        ),
-                      )
+                    ? const StopAudioButton()
                     : Tooltip(
                         message: "Play",
                         child: Transform.rotate(
