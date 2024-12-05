@@ -21,6 +21,7 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   @override
   void initState() {
     super.initState();
+    _audioPlayer.setSourceAsset('sounds/click.mp3');
     _startTimer();
   }
 
@@ -33,12 +34,12 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
 
   void _startTimer() {
     final interval = (60000 / _tempo).round() - 100; // Calculate interval in ms
-    print(interval);
+    final startTime = DateTime.now();
     _timer = Timer.periodic(Duration(milliseconds: interval), (timer) async {
       setState(() {
         _isRed = true;
       });
-      await _audioPlayer.play(AssetSource('sounds/click.mp3'));
+      await _audioPlayer.resume();
 
       // Reset color after 200 ms
       Future.delayed(const Duration(milliseconds: 50), () {
@@ -46,6 +47,8 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
           _isRed = false;
         });
       });
+      final endTime = DateTime.now();
+      print('${endTime.difference(startTime)}');
     });
   }
 
@@ -62,7 +65,7 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
     final t = ref.watch(tempoProvider);
     _updateTempo(t);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 50),
+      duration: const Duration(milliseconds: 100),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
