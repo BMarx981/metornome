@@ -34,7 +34,6 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
 
   void _startTimer() {
     final interval = (60000 / _tempo).round() - 100; // Calculate interval in ms
-    final startTime = DateTime.now();
     _timer = Timer.periodic(Duration(milliseconds: interval), (timer) async {
       setState(() {
         _isRed = true;
@@ -47,8 +46,6 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
           _isRed = false;
         });
       });
-      final endTime = DateTime.now();
-      print('${endTime.difference(startTime)}');
     });
   }
 
@@ -63,16 +60,16 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(tempoProvider);
-    _updateTempo(t);
+    if (t != _tempo) _updateTempo(t);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 50),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _isRed ? Colors.red : Colors.transparent,
         ),
-        width: 50,
-        height: 50,
+        width: 150,
+        height: 150,
       ),
     );
   }

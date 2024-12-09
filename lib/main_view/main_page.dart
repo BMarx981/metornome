@@ -41,8 +41,12 @@ class MainPage extends ConsumerWidget {
                 onEditingComplete: () => ref
                     .read(tempoProvider.notifier)
                     .state = double.parse(controller.text),
-                decoration:
-                    InputDecoration(hintText: tempoProv.toInt().toString()),
+                decoration: InputDecoration(
+                  counterText: "",
+                  hintText: tempoProv.toInt().toString(),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18.0)),
+                ),
               ),
             ),
           ),
@@ -54,7 +58,7 @@ class MainPage extends ConsumerWidget {
                     ? const BlinkingContainer()
                     : const SizedBox(height: 50, width: 50),
                 Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 36),
                   child: GestureDetector(
                     onTap: () =>
                         ref.read(playProvider.notifier).state = !playProv,
