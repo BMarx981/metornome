@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Metornome',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6F85B0)),
+        scaffoldBackgroundColor: const Color(0xFF6F85B0),
         useMaterial3: true,
       ),
       routerConfig: _router,

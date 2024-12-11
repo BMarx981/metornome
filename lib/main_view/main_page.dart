@@ -40,6 +40,7 @@ class MainPage extends ConsumerWidget {
                   onPressed: () =>
                       ref.read(tempoProvider.notifier).state = tempoProv - 1,
                   tooltip: 'Decrease tempo',
+                  shape: const CircleBorder(),
                   child: const Icon(Icons.remove),
                 ),
                 Text(" ${tempoProv.toInt()}\nBPM",
@@ -48,6 +49,7 @@ class MainPage extends ConsumerWidget {
                   onPressed: () =>
                       ref.read(tempoProvider.notifier).state = tempoProv + 1,
                   tooltip: 'Increase tempo',
+                  shape: const CircleBorder(),
                   child: const Icon(Icons.add),
                 ),
               ],
