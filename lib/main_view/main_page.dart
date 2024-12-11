@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:metornome/widgets/stop_button.dart';
 import 'package:metornome/widgets/blinking_widget.dart';
 import 'package:metornome/widgets/triangle_shape.dart';
@@ -32,22 +33,24 @@ class MainPage extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 60,
-              child: TextField(
-                maxLength: 3,
-                textAlign: TextAlign.center,
-                controller: controller,
-                onEditingComplete: () => ref
-                    .read(tempoProvider.notifier)
-                    .state = double.parse(controller.text),
-                decoration: InputDecoration(
-                  counterText: "",
-                  hintText: tempoProv.toInt().toString(),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                FloatingActionButton(
+                  onPressed: () =>
+                      ref.read(tempoProvider.notifier).state = tempoProv - 1,
+                  tooltip: 'Decrease tempo',
+                  child: const Icon(Icons.remove),
                 ),
-              ),
+                Text(" ${tempoProv.toInt()}\nBPM",
+                    style: GoogleFonts.exo2(fontSize: 45)),
+                FloatingActionButton(
+                  onPressed: () =>
+                      ref.read(tempoProvider.notifier).state = tempoProv + 1,
+                  tooltip: 'Increase tempo',
+                  child: const Icon(Icons.add),
+                ),
+              ],
             ),
           ),
           Center(
@@ -78,24 +81,6 @@ class MainPage extends ConsumerWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () =>
-                ref.read(tempoProvider.notifier).state = tempoProv + 1,
-            tooltip: 'Increase tempo',
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(height: 8),
-          FloatingActionButton(
-            onPressed: () =>
-                ref.read(tempoProvider.notifier).state = tempoProv - 1,
-            tooltip: 'Decrease tempo',
-            child: const Icon(Icons.remove),
           ),
         ],
       ),
