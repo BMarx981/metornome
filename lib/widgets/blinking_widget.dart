@@ -35,12 +35,12 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
   void _startTimer() {
     final interval = (60000 / _tempo).round() - 100; // Calculate interval in ms
     _timer = Timer.periodic(Duration(milliseconds: interval), (timer) async {
+      await _audioPlayer.resume();
       setState(() {
         _isRed = true;
       });
-      await _audioPlayer.resume();
 
-      // Reset color after 200 ms
+      // Reset color after 50 ms
       Future.delayed(const Duration(milliseconds: 50), () {
         setState(() {
           _isRed = false;
@@ -68,8 +68,8 @@ class _BlinkingContainerState extends ConsumerState<BlinkingContainer> {
           shape: BoxShape.circle,
           color: _isRed ? Colors.red : Colors.transparent,
         ),
-        width: 150,
-        height: 150,
+        width: 100,
+        height: 100,
       ),
     );
   }

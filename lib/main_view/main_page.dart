@@ -56,17 +56,19 @@ class MainPage extends ConsumerWidget {
               ],
             ),
           ),
-          EnhancedKnobWidget(
-            onChanged: (value) {
-              ref.read(tempoProvider.notifier).state = value;
-            },
-            minValue: 40,
-            maxValue: 200,
-            divisions: 200 - 40,
+          Expanded(
+            child: EnhancedKnobWidget(
+              onChanged: (value) {
+                ref.read(tempoProvider.notifier).state = value;
+              },
+              minValue: 40,
+              maxValue: 200,
+              divisions: 200 - 40,
+            ),
           ),
           playProv
               ? const BlinkingContainer()
-              : const SizedBox(height: 50, width: 50),
+              : const SizedBox(height: 100, width: 100),
           Padding(
             padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 36),
             child: GestureDetector(

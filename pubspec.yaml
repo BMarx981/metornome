@@ -28,5 +28,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Exo2
+      fonts:
+        - asset: assets/fonts/Exo2-Regular.ttf
+        - asset: assets/fonts/Exo2-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Exo2-Italic.ttf
+          style: italic
   assets:
     - assets/sounds/
