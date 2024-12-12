@@ -17,8 +17,15 @@ class _StopAudioButtonState extends ConsumerState {
       child: Container(
         width: 50,
         height: 50,
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 250, 99, 99),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Shadow color
+              blurRadius: 5, // Blur radius (softness of the shadow)
+              offset: const Offset(0, 5), // Offset in X and Y direction
+            ),
+          ],
+          color: const Color.fromARGB(255, 250, 99, 99),
           shape: BoxShape.rectangle,
         ),
       ),

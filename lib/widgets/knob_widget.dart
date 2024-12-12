@@ -3,17 +3,21 @@ import 'dart:math';
 
 class EnhancedKnobWidget extends StatefulWidget {
   /// Diameter of the knob
-  final double size; 
+  final double size;
+
   /// Callback for normalized value
-  final ValueChanged<double> onChanged; 
+  final ValueChanged<double> onChanged;
+
   /// Number of snap intervals (e.g., 10 for 0–100 in steps of 10)
-  final int divisions; 
+  final int divisions;
+
   /// Minimum normalized value
-  final double minValue; 
+  final double minValue;
+
   /// Maximum normalized value
-  final double maxValue; 
+  final double maxValue;
   // Color of the knob
-  final Color color; 
+  final Color color;
 
   const EnhancedKnobWidget({
     super.key,
@@ -26,10 +30,10 @@ class EnhancedKnobWidget extends StatefulWidget {
   });
 
   @override
-  _EnhancedKnobWidgetState createState() => _EnhancedKnobWidgetState();
+  EnhancedKnobWidgetState createState() => EnhancedKnobWidgetState();
 }
 
-class _EnhancedKnobWidgetState extends State<EnhancedKnobWidget> {
+class EnhancedKnobWidgetState extends State<EnhancedKnobWidget> {
   double _angle = 0; // Current angle in radians
 
   @override
@@ -83,7 +87,8 @@ class _EnhancedKnobWidgetState extends State<EnhancedKnobWidget> {
     // Convert angle to a value in the range [0, divisions)
     final normalizedAngle = (angle + pi) / (2 * pi); // Map [-pi, pi] to [0, 1]
     final rawValue = normalizedAngle * widget.divisions;
-    final snappedValue = rawValue.roundToDouble(); // Snap to the nearest interval
+    final snappedValue =
+        rawValue.roundToDouble(); // Snap to the nearest interval
 
     // Map snapped value to the minValue–maxValue range
     return widget.minValue +
