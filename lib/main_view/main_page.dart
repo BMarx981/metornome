@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:metornome/widgets/knob_widget.dart';
 import 'package:metornome/widgets/stop_button.dart';
 import 'package:metornome/widgets/blinking_widget.dart';
 import 'package:metornome/widgets/triangle_shape.dart';
@@ -55,33 +56,33 @@ class MainPage extends ConsumerWidget {
               ],
             ),
           ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                playProv
-                    ? const BlinkingContainer()
-                    : const SizedBox(height: 50, width: 50),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 36),
-                  child: GestureDetector(
-                    onTap: () =>
-                        ref.read(playProvider.notifier).state = !playProv,
-                    child: playProv
-                        ? const StopAudioButton()
-                        : Tooltip(
-                            message: "Play",
-                            child: Transform.rotate(
-                              angle: 1.57,
-                              child: CustomPaint(
-                                size: const Size(50, 50),
-                                painter: TriangleShape(),
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-              ],
+          EnhancedKnobWidget(
+            onChanged: (value) {
+              ref.read(tempoProvider.notifier).state = value;
+            },
+            minValue: 40,
+            maxValue: 200,
+            divisions: 200 - 40,
+          ),
+          playProv
+              ? const BlinkingContainer()
+              : const SizedBox(height: 50, width: 50),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 36),
+            child: GestureDetector(
+              onTap: () => ref.read(playProvider.notifier).state = !playProv,
+              child: playProv
+                  ? const StopAudioButton()
+                  : Tooltip(
+                      message: "Play",
+                      child: Transform.rotate(
+                        angle: 1.57,
+                        child: CustomPaint(
+                          size: const Size(50, 50),
+                          painter: TriangleShape(),
+                        ),
+                      ),
+                    ),
             ),
           ),
         ],
